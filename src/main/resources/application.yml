@@ -1,0 +1,10 @@
+server:
+  servlet:
+    context-path: /wakacop/api
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:demodb
+    username: thali
+    password: 123
+    driverClassName: org.h2.Driver	
