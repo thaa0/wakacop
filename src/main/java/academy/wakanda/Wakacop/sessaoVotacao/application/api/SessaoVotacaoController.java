@@ -16,6 +16,7 @@ public class SessaoVotacaoController implements SessaoVotacaoAPI {
 	@Override
 	public SessaoAberturaResponse abreSessao(SessaoAberturaRequest sessaoAberturaRequest) {
 		log.info("[Start] SessaoVotacaoController  - abreSessao");
+		log.info("[Start] SessaoVotacaoController  - {}", sessaoAberturaRequest.getIdPauta());		
 		SessaoAberturaResponse sessaoAberturaResponse = sessaoVotacaoService.abreSessao(sessaoAberturaRequest);
 		log.info("[Finish] SessaoVotacaoController  - abreSessao");
 		return sessaoAberturaResponse;
