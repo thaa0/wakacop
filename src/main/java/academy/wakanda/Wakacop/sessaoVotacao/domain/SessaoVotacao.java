@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
-
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-
 import academy.wakanda.Wakacop.pauta.domain.Pauta;
 import academy.wakanda.Wakacop.sessaoVotacao.application.api.SessaoAberturaRequest;
 import lombok.AccessLevel;
@@ -57,10 +54,31 @@ public class SessaoVotacao {
 	}
 	
 	public VotoPauta recebeVoto(VotoRequest votoRequest) {
+		validaSessaoAberta();
 		validaAssociado(votoRequest.getCpfAssociado());
 		VotoPauta voto = new VotoPauta(this, votoRequest);
 		votos.put(votoRequest.getCpfAssociado(), voto);
 		return voto;
+	}
+
+	private void validaSessaoAberta() {
+		atualizaStatus();
+		if(this.status.equals(StatusSessaoVotacao.FECHADA)) {
+			throw new RuntimeException("Sessão está fechada!");
+		}
+	}
+
+	private void atualizaStatus() {
+		if(this.status.equals(StatusSessaoVotacao.ABERTA)) {
+			if(LocalDateTime.now().isAfter(this.dataEncerramento)) {
+				encerraSessao();
+			}
+		}
+		
+	}
+
+	private void encerraSessao() {
+		this.status = StatusSessaoVotacao.FECHADA;		
 	}
 
 	private void validaAssociado(String cpfAssociado) {
