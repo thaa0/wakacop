@@ -1,5 +1,7 @@
 package academy.wakanda.Wakacop.sessaoVotacao.infra;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Repository;
 
 import academy.wakanda.Wakacop.sessaoVotacao.application.repository.SessaoVotacaoRepository;
@@ -20,5 +22,14 @@ public class SessaoVotacaoInfraRepository implements SessaoVotacaoRepository {
 		sessaoVotacaoSpringDataJPARepository.save(sessaoVotacao);
 		log.info("[Finish] SessaoVotacaoInfraRepository  - salva");
 		return sessaoVotacao;
+	}
+
+	@Override
+	public SessaoVotacao buscaPorId(UUID idSessao) {
+		log.info("[Start] SessaoVotacaoInfraRepository  - buscaPorId");
+		SessaoVotacao sessao = sessaoVotacaoSpringDataJPARepository.findById(idSessao)
+						.orElseThrow(()-> new RuntimeException("Sessao nao encontrada"));
+		log.info("[Finish] SessaoVotacaoInfraRepository  - buscaPorId");
+		return sessao;
 	}
 }
