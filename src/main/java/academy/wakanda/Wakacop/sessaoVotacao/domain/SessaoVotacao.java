@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import academy.wakanda.Wakacop.pauta.domain.Pauta;
+import academy.wakanda.Wakacop.sessaoVotacao.application.api.ResultadoSessaoResponse;
 import academy.wakanda.Wakacop.sessaoVotacao.application.api.SessaoAberturaRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -53,6 +54,11 @@ public class SessaoVotacao {
 		this.votos = new HashMap<>();
 	}
 	
+	public ResultadoSessaoResponse obtemResultado() {
+		atualizaStatus();
+		return new ResultadoSessaoResponse(this);
+	}
+	
 	public VotoPauta recebeVoto(VotoRequest votoRequest) {
 		validaSessaoAberta();
 		validaAssociado(votoRequest.getCpfAssociado());
@@ -86,5 +92,22 @@ public class SessaoVotacao {
 			new RuntimeException("Associado já votou nessa Sessão");
 		}
 		
+	}
+
+	public long getTotalVotos() {
+		return Long.valueOf(this.votos.size());
+	}
+
+	public long getTotalSim() {
+		return calculaVotosPorOpcao(OpcaoVoto.SIM);
+	}
+	public long getTotalNao() {
+		return calculaVotosPorOpcao(OpcaoVoto.NAO);
+	}
+
+	private long calculaVotosPorOpcao(OpcaoVoto sim) {
+		return votos.values().stream()
+				.filter(voto -> voto.opcaoIgual(sim))
+				.count();
 	}
 }

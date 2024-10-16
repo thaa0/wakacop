@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import academy.wakanda.Wakacop.pauta.application.service.PautaService;
 import academy.wakanda.Wakacop.pauta.domain.Pauta;
+import academy.wakanda.Wakacop.sessaoVotacao.application.api.ResultadoSessaoResponse;
 import academy.wakanda.Wakacop.sessaoVotacao.application.api.SessaoAberturaRequest;
 import academy.wakanda.Wakacop.sessaoVotacao.application.api.SessaoAberturaResponse;
 import academy.wakanda.Wakacop.sessaoVotacao.application.api.VotoResponse;
@@ -42,5 +43,15 @@ public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
 		sessaoVotacaoRepository.salva(sessao);
 		log.info("[Finish] SessaoVotacaoApplicationService  - recebeVoto");
 		return new VotoResponse(voto);
+	}
+
+	@Override
+	public ResultadoSessaoResponse obtemResultado(UUID idSessao) {
+		log.info("[Start] SessaoVotacaoApplicationService  - recebeVoto");
+		SessaoVotacao sessao = sessaoVotacaoRepository.buscaPorId(idSessao);
+		ResultadoSessaoResponse resultado = sessao.obtemResultado();
+		sessaoVotacaoRepository.salva(sessao);
+		log.info("[Finish] SessaoVotacaoApplicationService  - recebeVoto");
+		return resultado;
 	}
 }

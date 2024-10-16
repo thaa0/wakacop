@@ -3,6 +3,7 @@ package academy.wakanda.Wakacop.sessaoVotacao.domain;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,7 +26,7 @@ public class VotoPauta {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(columnDefinition = "uuid", updatable = false, unique = true, nullable = false)
 	private UUID id;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "sessao_votacao_id")
 	private SessaoVotacao sessaoVotacao;
 	private String cpfAssociado;
@@ -41,5 +42,9 @@ public class VotoPauta {
 	
 	public UUID getIdSessao() {
 		return this.sessaoVotacao.getId();
+	}
+	
+	public boolean opcaoIgual(OpcaoVoto opcao) {
+		return this.opcaoVoto.equals(opcao);
 	}
 }
